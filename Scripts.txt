@@ -1,0 +1,54 @@
+FPN:
+Path: "E:/RALis/FPN/ralis/"
+
+
+pretraining on GTAV:
+python train_supervised.py --exp-name "gta_pretraining" --checkpointer --ckpt-path "E:/RALis/scratch/ckpt_seg/FPN" --data-path "E:/RALis/scratch/" --input-size 1904 1024 --dataset "gta" --epoch-num 1500 --lr 0.0001 --train-batch-size 4 --val-batch-size 1 --patience 70 --test --snapshot "best_jaccard_val.pth" --full-res --optimizer Adam
+
+finetune:
+python train_supervised.py --exp-name "cityscapes_pretrained_dt" --checkpointer --ckpt-path "E:/RALis/scratch/ckpt_seg/FPN" --data-path "E:/RALis/scratch/" --load-weights --exp-name-toload "gta_pretraining" --input-size 512 1024 --full-res --dataset "cityscapes_subset" --epoch-num 1500 --lr 0.000001 --train-batch-size 16 --val-batch-size 1 --patience 70 --test --snapshot "best_jaccard_val.pth" --optimizer Adam
+
+train ralis:
+python -u run.py --exp-name "RALIS_cs_train_seed50" --full-res --region-size 128 128 --snapshot "best_jaccard_val.pth" --al-algorithm "ralis" --ckpt-path "E:/RALis/scratch/ckpt_seg/FPN" --data-path "E:/RALis/scratch/" --load-weights --exp-name-toload "gta_pretraining_deeplabv3_unfreeze" --dataset "cityscapes" --lr 0.0001 --train-batch-size 16 --val-batch-size 1 --patience 10 --input-size 256 512 --only-last-labeled --budget-labels 3840  --num-each-iter 256  --rl-pool 500 --seed 50 --optimizer Adam --freeze
+
+test ralis:
+Budgets:1920,3820,7650,11520,19200,30720
+python -u run.py --exp-name "RALIS_cs_test_1920" --al-algorithm "ralis" --checkpointer --ckpt-path "E:/RALis/scratch/ckpt_seg/FPN" --data-path "E:/RALis/scratch/" --load-weights --exp-name-toload "cityscapes_pretrained_dt" --dataset "cityscapes" --lr 0.000001 --train-batch-size 16 --val-batch-size 1 --patience 70 --optimizer Adam --input-size 256 512 --only-last-labeled --budget-labels 3840  --num-each-iter 256  --rl-pool 500 --seed 50 --train --test --final-test --optimizer Adam --exp-name-toload-rl "RALIS_cs_train_seed50" --freeze
+
+------------------------------------------------------------
+DeepLabV3:
+Path: "E:/RALis/DeepLabV3/ralis/"
+
+
+pretraining on GTAV:
+python train_supervised.py --exp-name "gta_pretraining" --checkpointer --ckpt-path "E:/RALis/scratch/ckpt_seg/deeplab" --data-path "E:/RALis/scratch/" --input-size 1904 1024 --dataset "gta" --epoch-num 1500 --lr 0.0001 --train-batch-size 4 --val-batch-size 1 --patience 70 --test --snapshot "best_jaccard_val.pth" --full-res --optimizer Adam
+
+finetune:
+python train_supervised.py --exp-name "cityscapes_pretrained_dt" --checkpointer --ckpt-path "E:/RALis/scratch/ckpt_seg/deeplab" --data-path "E:/RALis/scratch/" --load-weights --exp-name-toload "gta_pretraining" --input-size 512 1024 --full-res --dataset "cityscapes_subset" --epoch-num 1500 --lr 0.000001 --train-batch-size 16 --val-batch-size 1 --patience 70 --test --snapshot "best_jaccard_val.pth" --optimizer Adam
+
+train ralis:
+python -u run.py --exp-name "RALIS_cs_train_seed50" --full-res --region-size 128 128 --snapshot "best_jaccard_val.pth" --al-algorithm "ralis" --ckpt-path "E:/RALis/scratch/ckpt_seg/deeplab" --data-path "E:/RALis/scratch/" --load-weights --exp-name-toload "gta_pretraining_deeplabv3_unfreeze" --dataset "cityscapes" --lr 0.0001 --train-batch-size 16 --val-batch-size 1 --patience 10 --input-size 256 512 --only-last-labeled --budget-labels 3840  --num-each-iter 256  --rl-pool 500 --seed 50 --optimizer Adam --freeze
+
+test ralis:
+Budgets:1920,3820,7650,11520,19200,30720
+python -u run.py --exp-name "RALIS_cs_test_1920" --al-algorithm "ralis" --checkpointer --ckpt-path "E:/RALis/scratch/ckpt_seg/deeplab" --data-path "E:/RALis/scratch/" --load-weights --exp-name-toload "cityscapes_pretrained_dt" --dataset "cityscapes" --lr 0.000001 --train-batch-size 16 --val-batch-size 1 --patience 70 --optimizer Adam --input-size 256 512 --only-last-labeled --budget-labels 3840  --num-each-iter 256  --rl-pool 500 --seed 50 --train --test --final-test --optimizer Adam --exp-name-toload-rl "RALIS_cs_train_seed50" --freeze
+
+------------------------------------------------------------
+DeepLabV3+:
+Path: "E:/RALis/DeepLabV3plus/ralis/"
+
+
+pretraining on GTAV:
+python train_supervised.py --exp-name "gta_pretraining" --checkpointer --ckpt-path "E:/RALis/scratch/ckpt_seg/deeplabplus" --data-path "E:/RALis/scratch/" --input-size 1904 1024 --dataset "gta" --epoch-num 1500 --lr 0.0001 --train-batch-size 4 --val-batch-size 1 --patience 70 --test --snapshot "best_jaccard_val.pth" --full-res --optimizer Adam
+
+finetune:
+python train_supervised.py --exp-name "cityscapes_pretrained_dt" --checkpointer --ckpt-path "E:/RALis/scratch/ckpt_seg/deeplabplus" --data-path "E:/RALis/scratch/" --load-weights --exp-name-toload "gta_pretraining" --input-size 512 1024 --full-res --dataset "cityscapes_subset" --epoch-num 1500 --lr 0.000001 --train-batch-size 16 --val-batch-size 1 --patience 70 --test --snapshot "best_jaccard_val.pth" --optimizer Adam
+
+train ralis:
+python -u run.py --exp-name "RALIS_cs_train_seed50" --full-res --region-size 128 128 --snapshot "best_jaccard_val.pth" --al-algorithm "ralis" --ckpt-path "E:/RALis/scratch/ckpt_seg/deeplabplus" --data-path "E:/RALis/scratch/" --load-weights --exp-name-toload "gta_pretraining_deeplabv3_unfreeze" --dataset "cityscapes" --lr 0.0001 --train-batch-size 16 --val-batch-size 1 --patience 10 --input-size 256 512 --only-last-labeled --budget-labels 3840  --num-each-iter 256  --rl-pool 500 --seed 50 --optimizer Adam --freeze
+
+test ralis:
+Budgets:1920,3820,7650,11520,19200,30720
+python -u run.py --exp-name "RALIS_cs_test_1920" --al-algorithm "ralis" --checkpointer --ckpt-path "E:/RALis/scratch/ckpt_seg/deeplabplus" --data-path "E:/RALis/scratch/" --load-weights --exp-name-toload "cityscapes_pretrained_dt" --dataset "cityscapes" --lr 0.000001 --train-batch-size 16 --val-batch-size 1 --patience 70 --optimizer Adam --input-size 256 512 --only-last-labeled --budget-labels 3840  --num-each-iter 256  --rl-pool 500 --seed 50 --train --test --final-test --optimizer Adam --exp-name-toload-rl "RALIS_cs_train_seed50" --freeze
+
+------------------------------------------------------------
